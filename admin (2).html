@@ -1,0 +1,215 @@
+<!doctype html>
+<html lang="ko">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>청첩장 갤러리 관리자</title>
+<link href="https://fonts.googleapis.com/css2?family=Noto+Serif+KR:wght@500;600&family=Noto+Sans+KR:wght@400;500&display=swap" rel="stylesheet">
+<script src="https://www.gstatic.com/firebasejs/10.13.0/firebase-app-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/10.13.0/firebase-firestore-compat.js"></script>
+<style>
+  :root{ --paper:#F6F3EC; --ink:#262420; --sub:#6B685F; --line:#EAE4D6; --gold:#A8823F; }
+  *{box-sizing:border-box;}
+  body{margin:0;background:var(--paper);color:var(--ink);font-family:'Noto Sans KR',sans-serif;}
+  .wrap{max-width:520px;margin:0 auto;padding:24px 20px 60px;}
+  h1{font-family:'Noto Serif KR',serif;font-size:18px;text-align:center;margin:10px 0 24px;}
+  .login-box{max-width:300px;margin:80px auto;background:#fff;border:1px solid var(--line);border-radius:8px;padding:28px;text-align:center;}
+  .login-box input{width:100%;box-sizing:border-box;padding:10px 12px;border:1px solid #DDD6C4;border-radius:4px;font-size:14px;margin:12px 0;}
+  .login-box button, .primary-btn{width:100%;padding:11px;background:var(--ink);color:#fff;border:none;border-radius:4px;font-size:14px;cursor:pointer;}
+  .error{color:#C0392B;font-size:12px;}
+  .card{background:#fff;border:1px solid var(--line);border-radius:6px;padding:16px;margin-bottom:16px;}
+  .drop{border:2px dashed #DDD6C4;border-radius:6px;padding:24px;text-align:center;color:var(--sub);font-size:13px;cursor:pointer;margin-bottom:10px;}
+  .drop.dragover{border-color:var(--gold);color:var(--gold);}
+  input[type=file]{display:none;}
+  .status{font-size:12.5px;color:var(--sub);text-align:center;min-height:18px;}
+  .item{display:flex;align-items:center;gap:10px;border:1px solid var(--line);border-radius:6px;padding:8px;margin-bottom:8px;background:#fff;}
+  .item img{width:56px;height:56px;object-fit:cover;border-radius:4px;flex-shrink:0;}
+  .item .idx{font-size:11px;color:var(--sub);width:18px;text-align:center;flex-shrink:0;}
+  .item .btns{display:flex;gap:4px;margin-left:auto;flex-shrink:0;}
+  .item button{background:#EFEADC;border:none;border-radius:4px;padding:6px 9px;font-size:12px;cursor:pointer;color:#4A4740;}
+  .item button.danger{background:#FDF3F3;color:#C0392B;}
+  .save-bar{position:sticky;bottom:0;background:var(--paper);padding:14px 0;}
+  .topbar{display:flex;justify-content:space-between;align-items:center;margin-bottom:8px;}
+  .topbar a{font-size:12.5px;color:var(--sub);text-decoration:none;}
+  .empty{text-align:center;font-size:12.5px;color:#B7B2A4;padding:20px 0;}
+</style>
+</head>
+<body>
+
+<div id="login" class="login-box">
+  <div style="font-family:'Noto Serif KR',serif;font-size:16px;margin-bottom:4px;">관리자 로그인</div>
+  <input type="password" id="pw" placeholder="비밀번호">
+  <button onclick="tryLogin()">입장</button>
+  <div class="error" id="pw-error" style="margin-top:8px;"></div>
+</div>
+
+<div class="wrap" id="panel" style="display:none;">
+  <div class="topbar">
+    <a href="index.html">← 청첩장 보기</a>
+    <span style="font-size:12px;color:var(--sub);">갤러리 관리</span>
+  </div>
+  <h1>사진 업로드 &amp; 순서 관리</h1>
+
+  <div class="card">
+    <div class="drop" id="drop">사진을 여기로 끌어놓거나 클릭해서 선택하세요<br>(여러 장 한 번에 선택 가능)</div>
+    <input type="file" id="file-input" accept="image/*" multiple>
+    <div class="status" id="upload-status"></div>
+  </div>
+
+  <div class="card">
+    <div id="list"></div>
+    <div class="empty" id="empty-msg" style="display:none;">아직 등록된 사진이 없습니다. 위에서 사진을 업로드해 주세요.</div>
+  </div>
+
+  <div class="save-bar">
+    <button class="primary-btn" onclick="saveOrder()">변경사항 저장</button>
+    <div class="status" id="save-status"></div>
+  </div>
+</div>
+
+<script>
+  /* =========================================================
+     ⚠️ 아래 두 곳을 본인 값으로 교체하세요.
+  ========================================================= */
+  const ADMIN_PASSWORD = "1234"; // 관리자 비밀번호 (원하는 값으로 바꾸세요)
+
+  const firebaseConfig = {
+    apiKey: "AIzaSyBtc6oS7_HfZFhdRWH2O48XofNkWncmglk",
+    authDomain: "magics-17.firebaseapp.com",
+    projectId: "magics-17",
+  };
+
+  const CLOUDINARY_CLOUD_NAME = "trggypzm";
+  const CLOUDINARY_UPLOAD_PRESET = "Magics";
+  /* ========================================================= */
+
+  let firebaseReady = true;
+  try {
+    firebase.initializeApp(firebaseConfig);
+  } catch (e) {
+    firebaseReady = false;
+    document.body.insertAdjacentHTML('afterbegin', `<div style="background:#FDF3F3;color:#C0392B;padding:10px;text-align:center;font-size:12.5px;">Firebase 초기화 실패: ${e.message}</div>`);
+  }
+  const db = firebaseReady ? firebase.firestore() : null;
+  const docRef = firebaseReady ? db.collection("wedding").doc("gallery") : null;
+
+  let images = [];
+
+  function tryLogin(){
+    const val = document.getElementById('pw').value;
+    if (val === ADMIN_PASSWORD) {
+      document.getElementById('login').style.display = 'none';
+      document.getElementById('panel').style.display = 'block';
+      loadImages();
+    } else {
+      document.getElementById('pw-error').textContent = '비밀번호가 올바르지 않습니다.';
+    }
+  }
+  document.getElementById('pw').addEventListener('keydown', e => { if (e.key === 'Enter') tryLogin(); });
+
+  function loadImages(){
+    docRef.get().then(doc => {
+      images = (doc.exists && Array.isArray(doc.data().urls)) ? doc.data().urls : [];
+      renderList();
+    }).catch(e => {
+      document.getElementById('save-status').textContent = '불러오기 실패: ' + e.message;
+    });
+  }
+
+  function renderList(){
+    const list = document.getElementById('list');
+    const empty = document.getElementById('empty-msg');
+    list.innerHTML = "";
+    if (images.length === 0) { empty.style.display = 'block'; return; }
+    empty.style.display = 'none';
+    images.forEach((url, i) => {
+      const row = document.createElement('div');
+      row.className = 'item';
+      row.innerHTML = `
+        <span class="idx">${i + 1}</span>
+        <img src="${url}" alt="">
+        <div class="btns">
+          <button onclick="moveImage(${i}, -1)" ${i === 0 ? 'disabled style="opacity:.3"' : ''}>▲</button>
+          <button onclick="moveImage(${i}, 1)" ${i === images.length - 1 ? 'disabled style="opacity:.3"' : ''}>▼</button>
+          <button class="danger" onclick="removeImage(${i})">삭제</button>
+        </div>`;
+      list.appendChild(row);
+    });
+  }
+
+  function moveImage(i, dir){
+    const j = i + dir;
+    if (j < 0 || j >= images.length) return;
+    [images[i], images[j]] = [images[j], images[i]];
+    renderList();
+  }
+  function removeImage(i){
+    images.splice(i, 1);
+    renderList();
+  }
+
+  function saveOrder(){
+    const statusEl = document.getElementById('save-status');
+    if (!docRef) { statusEl.textContent = 'Firebase 설정이 잘못되었습니다. 상단 에러 메시지를 확인하세요.'; return; }
+    statusEl.textContent = '저장 중...';
+    let done = false;
+    const timeoutId = setTimeout(() => {
+      if (!done) statusEl.textContent = '응답이 지연되고 있어요. Firestore Database가 "테스트 모드"로 생성되었는지, 네트워크(와이파이/VPN)를 확인해주세요.';
+    }, 6000);
+    docRef.set({ urls: images }).then(() => {
+      done = true;
+      clearTimeout(timeoutId);
+      statusEl.textContent = '저장되었습니다 ✓';
+      setTimeout(() => statusEl.textContent = '', 2000);
+    }).catch(e => {
+      done = true;
+      clearTimeout(timeoutId);
+      statusEl.textContent = '저장 실패: ' + e.code + ' - ' + e.message;
+    });
+  }
+
+  // 업로드 (Cloudinary unsigned upload)
+  const dropEl = document.getElementById('drop');
+  const fileInput = document.getElementById('file-input');
+  dropEl.onclick = () => fileInput.click();
+  dropEl.ondragover = (e) => { e.preventDefault(); dropEl.classList.add('dragover'); };
+  dropEl.ondragleave = () => dropEl.classList.remove('dragover');
+  dropEl.ondrop = (e) => {
+    e.preventDefault();
+    dropEl.classList.remove('dragover');
+    handleFiles(e.dataTransfer.files);
+  };
+  fileInput.onchange = () => handleFiles(fileInput.files);
+
+  async function handleFiles(fileList){
+    const files = Array.from(fileList);
+    if (files.length === 0) return;
+    const statusEl = document.getElementById('upload-status');
+    for (let i = 0; i < files.length; i++) {
+      statusEl.textContent = `업로드 중... (${i + 1}/${files.length})`;
+      try {
+        const url = await uploadToCloudinary(files[i]);
+        images.push(url);
+        renderList();
+      } catch (e) {
+        statusEl.textContent = '업로드 실패: ' + e.message;
+        return;
+      }
+    }
+    statusEl.textContent = '업로드 완료! 순서를 정리한 뒤 "변경사항 저장"을 눌러주세요.';
+    fileInput.value = "";
+  }
+
+  async function uploadToCloudinary(file){
+    const url = `https://api.cloudinary.com/v1_1/${CLOUDINARY_CLOUD_NAME}/image/upload`;
+    const form = new FormData();
+    form.append("file", file);
+    form.append("upload_preset", CLOUDINARY_UPLOAD_PRESET);
+    const res = await fetch(url, { method: "POST", body: form });
+    if (!res.ok) throw new Error("Cloudinary 업로드 실패 (설정값을 확인하세요)");
+    const data = await res.json();
+    return data.secure_url;
+  }
+</script>
+</body>
+</html>
