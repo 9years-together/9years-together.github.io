@@ -1,0 +1,226 @@
+<!doctype html>
+<html lang="ko">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>청첩장 갤러리 관리자</title>
+<link href="https://fonts.googleapis.com/css2?family=Noto+Serif+KR:wght@500;600&family=Noto+Sans+KR:wght@400;500&display=swap" rel="stylesheet">
+<style>
+  :root{ --paper:#F6F3EC; --ink:#262420; --sub:#6B685F; --line:#EAE4D6; --gold:#A8823F; }
+  *{box-sizing:border-box;}
+  body{margin:0;background:var(--paper);color:var(--ink);font-family:'Noto Sans KR',sans-serif;}
+  .wrap{max-width:520px;margin:0 auto;padding:24px 20px 60px;}
+  h1{font-family:'Noto Serif KR',serif;font-size:18px;text-align:center;margin:10px 0 24px;}
+  .login-box{max-width:300px;margin:80px auto;background:#fff;border:1px solid var(--line);border-radius:8px;padding:28px;text-align:center;}
+  .login-box input{width:100%;box-sizing:border-box;padding:10px 12px;border:1px solid #DDD6C4;border-radius:4px;font-size:14px;margin:12px 0;}
+  .login-box button, .primary-btn{width:100%;padding:11px;background:var(--ink);color:#fff;border:none;border-radius:4px;font-size:14px;cursor:pointer;font-family:inherit;}
+  .error{color:#C0392B;font-size:12px;}
+  .card{background:#fff;border:1px solid var(--line);border-radius:6px;padding:16px;margin-bottom:16px;}
+  .drop{border:2px dashed #DDD6C4;border-radius:6px;padding:24px;text-align:center;color:var(--sub);font-size:13px;cursor:pointer;margin-bottom:10px;}
+  .drop.dragover{border-color:var(--gold);color:var(--gold);}
+  input[type=file]{display:none;}
+  .status{font-size:12.5px;color:var(--sub);text-align:center;min-height:18px;margin-top:6px;}
+  .item{display:flex;align-items:center;gap:10px;border:1px solid var(--line);border-radius:6px;padding:8px;margin-bottom:8px;background:#fff;}
+  .item img{width:56px;height:56px;object-fit:cover;border-radius:4px;flex-shrink:0;}
+  .item .idx{font-size:11px;color:var(--sub);width:18px;text-align:center;flex-shrink:0;}
+  .item .btns{display:flex;gap:4px;margin-left:auto;flex-shrink:0;}
+  .item button{background:#EFEADC;border:none;border-radius:4px;padding:6px 9px;font-size:12px;cursor:pointer;color:#4A4740;font-family:inherit;}
+  .item button.danger{background:#FDF3F3;color:#C0392B;}
+  .save-bar{position:sticky;bottom:0;background:var(--paper);padding:14px 0;}
+  .topbar{display:flex;justify-content:space-between;align-items:center;margin-bottom:8px;}
+  .topbar a{font-size:12.5px;color:var(--sub);text-decoration:none;}
+  .empty{text-align:center;font-size:12.5px;color:#B7B2A4;padding:20px 0;}
+</style>
+</head>
+<body>
+
+<div id="login" class="login-box">
+  <div style="font-family:'Noto Serif KR',serif;font-size:16px;margin-bottom:4px;">관리자 로그인</div>
+  <input type="password" id="pw" placeholder="비밀번호">
+  <button onclick="tryLogin()">입장</button>
+  <div class="error" id="pw-error" style="margin-top:8px;"></div>
+</div>
+
+<div class="wrap" id="panel" style="display:none;">
+  <div class="topbar">
+    <a href="index.html">← 청첩장 보기</a>
+    <span style="font-size:12px;color:var(--sub);">갤러리 관리</span>
+  </div>
+  <h1>사진 업로드 &amp; 순서 관리</h1>
+
+  <div class="card">
+    <div class="drop" id="drop">사진을 여기로 끌어놓거나 클릭해서 선택하세요<br>(여러 장 한 번에 선택 가능)</div>
+    <input type="file" id="file-input" accept="image/*" multiple>
+    <div class="status" id="upload-status"></div>
+  </div>
+
+  <div class="card">
+    <div id="list"></div>
+    <div class="empty" id="empty-msg" style="display:none;">아직 등록된 사진이 없습니다. 위에서 사진을 업로드해 주세요.</div>
+  </div>
+
+  <div class="save-bar">
+    <button class="primary-btn" onclick="saveOrder()">변경사항 저장</button>
+    <div class="status" id="save-status"></div>
+  </div>
+</div>
+
+<script>
+  /* =========================================================
+     설정값
+  ========================================================= */
+  var ADMIN_PASSWORD = "1234";
+  var FIRESTORE_PROJECT = "magics-17";
+  var FIRESTORE_URL = "https://firestore.googleapis.com/v1/projects/" + FIRESTORE_PROJECT + "/databases/(default)/documents/wedding/gallery";
+  var CLOUDINARY_CLOUD_NAME = "trggypzm";
+  var CLOUDINARY_UPLOAD_PRESET = "Magics";
+
+  var images = [];
+
+  /* 로그인 */
+  function tryLogin() {
+    var val = document.getElementById("pw").value;
+    if (val === ADMIN_PASSWORD) {
+      document.getElementById("login").style.display = "none";
+      document.getElementById("panel").style.display = "block";
+      loadImages();
+    } else {
+      document.getElementById("pw-error").textContent = "비밀번호가 올바르지 않습니다.";
+    }
+  }
+  document.getElementById("pw").addEventListener("keydown", function(e) { if (e.key === "Enter") tryLogin(); });
+
+  /* Firestore REST API로 갤러리 읽기 */
+  function loadImages() {
+    var statusEl = document.getElementById("save-status");
+    statusEl.textContent = "불러오는 중...";
+    fetch(FIRESTORE_URL)
+      .then(function(res) {
+        if (res.status === 404) { images = []; renderList(); statusEl.textContent = ""; return; }
+        if (!res.ok) throw new Error("HTTP " + res.status);
+        return res.json();
+      })
+      .then(function(doc) {
+        if (!doc) return;
+        if (doc.fields && doc.fields.urls && doc.fields.urls.arrayValue && doc.fields.urls.arrayValue.values) {
+          images = doc.fields.urls.arrayValue.values.map(function(v) { return v.stringValue; });
+        } else {
+          images = [];
+        }
+        renderList();
+        statusEl.textContent = "";
+      })
+      .catch(function(e) {
+        statusEl.textContent = "불러오기 실패: " + e.message;
+      });
+  }
+
+  function renderList() {
+    var list = document.getElementById("list");
+    var empty = document.getElementById("empty-msg");
+    list.innerHTML = "";
+    if (images.length === 0) { empty.style.display = "block"; return; }
+    empty.style.display = "none";
+    images.forEach(function(url, i) {
+      var row = document.createElement("div");
+      row.className = "item";
+      row.innerHTML =
+        '<span class="idx">' + (i + 1) + "</span>" +
+        '<img src="' + url + '" alt="">' +
+        '<div class="btns">' +
+        '<button onclick="moveImage(' + i + ", -1)\" " + (i === 0 ? 'disabled style="opacity:.3"' : "") + ">▲</button>" +
+        '<button onclick="moveImage(' + i + ", 1)\" " + (i === images.length - 1 ? 'disabled style="opacity:.3"' : "") + ">▼</button>" +
+        '<button class="danger" onclick="removeImage(' + i + ')">삭제</button>' +
+        "</div>";
+      list.appendChild(row);
+    });
+  }
+
+  function moveImage(i, dir) {
+    var j = i + dir;
+    if (j < 0 || j >= images.length) return;
+    var temp = images[i]; images[i] = images[j]; images[j] = temp;
+    renderList();
+  }
+  function removeImage(i) {
+    images.splice(i, 1);
+    renderList();
+  }
+
+  /* Firestore REST API로 갤러리 저장 */
+  function saveOrder() {
+    var statusEl = document.getElementById("save-status");
+    statusEl.textContent = "저장 중...";
+    var body = {
+      fields: {
+        urls: {
+          arrayValue: {
+            values: images.map(function(url) { return { stringValue: url }; })
+          }
+        }
+      }
+    };
+    fetch(FIRESTORE_URL, {
+      method: "PATCH",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify(body)
+    })
+      .then(function(res) {
+        if (!res.ok) return res.text().then(function(t) { throw new Error("HTTP " + res.status + ": " + t); });
+        return res.json();
+      })
+      .then(function() {
+        statusEl.textContent = "저장되었습니다 ✓";
+        setTimeout(function() { statusEl.textContent = ""; }, 2000);
+      })
+      .catch(function(e) {
+        statusEl.textContent = "저장 실패: " + e.message;
+      });
+  }
+
+  /* Cloudinary 업로드 */
+  var dropEl = document.getElementById("drop");
+  var fileInput = document.getElementById("file-input");
+  dropEl.onclick = function() { fileInput.click(); };
+  dropEl.ondragover = function(e) { e.preventDefault(); dropEl.classList.add("dragover"); };
+  dropEl.ondragleave = function() { dropEl.classList.remove("dragover"); };
+  dropEl.ondrop = function(e) { e.preventDefault(); dropEl.classList.remove("dragover"); handleFiles(e.dataTransfer.files); };
+  fileInput.onchange = function() { handleFiles(fileInput.files); };
+
+  function handleFiles(fileList) {
+    var files = Array.from(fileList);
+    if (files.length === 0) return;
+    var statusEl = document.getElementById("upload-status");
+    var idx = 0;
+
+    function uploadNext() {
+      if (idx >= files.length) {
+        statusEl.textContent = "업로드 완료! 순서를 정리한 뒤 '변경사항 저장'을 눌러주세요.";
+        fileInput.value = "";
+        return;
+      }
+      statusEl.textContent = "업로드 중... (" + (idx + 1) + "/" + files.length + ")";
+      var url = "https://api.cloudinary.com/v1_1/" + CLOUDINARY_CLOUD_NAME + "/image/upload";
+      var form = new FormData();
+      form.append("file", files[idx]);
+      form.append("upload_preset", CLOUDINARY_UPLOAD_PRESET);
+      fetch(url, { method: "POST", body: form })
+        .then(function(res) {
+          if (!res.ok) throw new Error("Cloudinary 업로드 실패 (" + res.status + ")");
+          return res.json();
+        })
+        .then(function(data) {
+          images.push(data.secure_url);
+          renderList();
+          idx++;
+          uploadNext();
+        })
+        .catch(function(e) {
+          statusEl.textContent = "업로드 실패: " + e.message;
+        });
+    }
+    uploadNext();
+  }
+</script>
+</body>
+</html>
