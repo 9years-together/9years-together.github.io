@@ -1,0 +1,449 @@
+<!doctype html>
+<html lang="ko">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>조윤형 &amp; 최유정 결혼식에 초대합니다</title>
+<meta name="description" content="2026.10.24 결혼합니다. 초대장을 확인해주세요." />
+<meta property="og:type" content="website" />
+<meta property="og:title" content="조윤형 ♥ 최유정 결혼식에 초대합니다" />
+<meta property="og:description" content="2026년 10월 24일 (토) 오후 3시 10분 | 신도림 라마다호텔 5층 세인트그레이스홀" />
+<meta property="og:image" content="https://9years-together.github.io/photo-hero.jpg" />
+<meta property="og:url" content="https://9years-together.github.io/" />
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,400;1,400;1,500&family=Noto+Serif+KR:wght@500;600&family=Noto+Sans+KR:wght@400;500&display=swap" rel="stylesheet">
+<script src="https://t1.kakaocdn.net/kakao_js_sdk/2.7.2/kakao.min.js"></script>
+<style>
+  :root{
+    --paper:#F6F3EC; --ink:#262420; --sub:#6B685F; --line:#EAE4D6;
+    --gold:#A8823F; --sage:#7C8B6F; --sage-bg:#EEF0E9; --card:#FFFFFF;
+  }
+  *{box-sizing:border-box;}
+  body{margin:0;background:var(--paper);color:var(--ink);font-family:'Noto Sans KR',sans-serif;}
+  .frame{max-width:480px;margin:0 auto;background:var(--paper);box-shadow:0 0 40px rgba(0,0,0,0.06);min-height:100vh;}
+  .hero{position:relative;width:100%;aspect-ratio:4/5;overflow:hidden;}
+  .hero img{width:100%;height:100%;object-fit:cover;display:block;}
+  .hero::after{content:"";position:absolute;inset:0;background:linear-gradient(to bottom, rgba(38,36,32,0.05) 0%, rgba(38,36,32,0.55) 100%);}
+  .hero-text{position:absolute;bottom:28px;left:0;right:0;text-align:center;color:#F6F3EC;z-index:2;}
+  .eyebrow-en{font-family:'Cormorant Garamond',serif;font-style:italic;letter-spacing:.3em;font-size:12px;opacity:.9;margin-bottom:10px;text-transform:uppercase;}
+  .names{font-family:'Noto Serif KR',serif;font-size:28px;font-weight:600;}
+  .amp{font-family:'Cormorant Garamond',serif;font-style:italic;font-weight:400;}
+  .date-line{margin-top:10px;font-family:'Cormorant Garamond',serif;font-size:16px;letter-spacing:.15em;}
+  .content{padding:36px 28px;}
+  .eyebrow{font-family:'Cormorant Garamond',serif;font-style:italic;letter-spacing:.28em;font-size:13px;color:var(--gold);text-align:center;margin-bottom:6px;text-transform:uppercase;}
+  h2.sec{font-family:'Noto Serif KR',serif;font-weight:600;font-size:22px;text-align:center;margin:0 0 4px;}
+  .divider{display:flex;align-items:center;justify-content:center;margin:8px 0 28px;}
+  p.msg{white-space:pre-line;text-align:center;line-height:1.9;font-size:15px;color:#4A4740;margin-bottom:32px;}
+  .couple-row{display:flex;gap:12px;margin-bottom:8px;}
+  .couple-card{flex:1;background:var(--card);border-radius:4px;padding:18px 12px;text-align:center;border:1px solid var(--line);}
+  .couple-label{font-size:11px;letter-spacing:.2em;color:var(--gold);margin-bottom:6px;}
+  .couple-name{font-family:'Noto Serif KR',serif;font-size:17px;font-weight:600;margin-bottom:8px;}
+  .couple-phone{font-size:12px;color:var(--sage);text-decoration:none;}
+  .center-btn-wrap{text-align:center;margin:20px 0 32px;}
+  .outline-btn{background:none;border:1px solid var(--gold);color:var(--gold);border-radius:24px;padding:9px 22px;font-size:13px;letter-spacing:.05em;cursor:pointer;font-family:inherit;}
+  .gallery{display:grid;grid-template-columns:repeat(3,1fr);gap:4px;margin-bottom:32px;}
+  .gallery button{padding:0;border:none;cursor:pointer;aspect-ratio:1;overflow:hidden;background:none;}
+  .gallery img{width:100%;height:100%;object-fit:cover;display:block;}
+  .venue-name{font-family:'Noto Serif KR',serif;font-size:16px;margin-bottom:4px;}
+  .venue-addr{font-size:13px;color:var(--sub);}
+  .map-row{display:flex;gap:8px;justify-content:center;margin:14px 0 16px;}
+  .pill-btn{font-size:12.5px;color:#4A4740;background:#EFEADC;border:none;border-radius:20px;padding:8px 16px;text-decoration:none;cursor:pointer;font-family:inherit;}
+  .venue-note{font-size:12.5px;color:var(--sub);text-align:center;line-height:1.8;margin-bottom:32px;}
+  .share-row{display:flex;gap:8px;justify-content:center;margin-bottom:12px;}
+  .footer-note{text-align:center;font-size:11px;color:#B7B2A4;margin-top:24px;}
+  .overlay{position:fixed;inset:0;background:rgba(20,19,16,.92);display:none;align-items:center;justify-content:center;z-index:100;}
+  .overlay.open{display:flex;}
+  .overlay img{max-width:85%;max-height:80%;object-fit:contain;}
+  .lb-btn{position:absolute;background:none;border:none;color:#fff;cursor:pointer;font-size:28px;}
+  .lb-close{top:20px;right:20px;}
+  .lb-prev{left:12px;}
+  .lb-next{right:12px;}
+  .sheet-overlay{position:fixed;inset:0;background:rgba(20,19,16,.5);display:none;align-items:flex-end;justify-content:center;z-index:100;}
+  .sheet-overlay.open{display:flex;}
+  .sheet{background:#FFFDF9;width:100%;max-width:480px;border-radius:16px 16px 0 0;padding:24px 22px 32px;max-height:78vh;overflow-y:auto;}
+  .sheet-title{text-align:center;font-family:'Noto Serif KR',serif;font-size:16px;margin-bottom:18px;}
+  .acc-group-title{font-size:11px;letter-spacing:.15em;color:var(--gold);margin-bottom:8px;}
+  .acc-row{display:flex;align-items:center;justify-content:space-between;padding:9px 0;border-bottom:1px solid #F0EBDE;}
+  .acc-name{font-size:13px;font-weight:600;}
+  .acc-bank{font-size:12px;color:#8A867A;}
+  .copy-btn{display:inline-flex;align-items:center;gap:4px;font-size:12px;color:var(--sage);background:var(--sage-bg);border:none;border-radius:20px;padding:5px 10px;cursor:pointer;font-family:inherit;}
+  .sheet-close{width:100%;margin-top:8px;padding:12px;border:1px solid var(--line);background:none;border-radius:4px;font-size:13px;cursor:pointer;font-family:inherit;}
+  .admin-link{display:block;text-align:center;padding:16px 0 24px;font-size:11px;color:#CFC9B7;text-decoration:none;}
+  .gallery-loading{text-align:center;font-size:12px;color:var(--sub);padding:20px 0;}
+</style>
+</head>
+<body>
+<div class="frame">
+  <div class="hero">
+    <img src="photo-hero.jpg" alt="">
+    <div class="hero-text">
+      <div class="eyebrow-en">WE ARE GETTING MARRIED</div>
+      <div class="names">조윤형 <span class="amp">&amp;</span> 최유정</div>
+      <div class="date-line">2026. 10. 24 (토) 오후 3시 10분</div>
+    </div>
+  </div>
+
+  <div class="content">
+    <div class="eyebrow">Message</div>
+    <h2 class="sec">초대합니다</h2>
+    <div class="divider">
+      <svg width="72" height="16" viewBox="0 0 72 16" fill="none"><path d="M0 8H28" stroke="#A8823F" stroke-width="0.75"/><circle cx="36" cy="8" r="3" stroke="#A8823F" stroke-width="0.75" fill="none"/><path d="M44 8H72" stroke="#A8823F" stroke-width="0.75"/></svg>
+    </div>
+    <p class="msg">어떤 날은 처음 사랑하던 떨리는 그날처럼
+어떤날은 편안하고 오래된 친구처럼
+모든 순간, 모든 당신을 사랑하겠습니다.
+서로를 향한 사랑으로
+하나가 되는 자리에 함께해 주세요.</p>
+
+    <div class="couple-row">
+      <div class="couple-card">
+        <div class="couple-label">신랑</div>
+        <div class="couple-name">조윤형</div>
+        <a class="couple-phone" href="tel:010-3103-6645">📞 010-3103-6645</a>
+      </div>
+      <div class="couple-card">
+        <div class="couple-label">신부</div>
+        <div class="couple-name">최유정</div>
+        <a class="couple-phone" href="tel:010-7450-2894">📞 010-7450-2894</a>
+      </div>
+    </div>
+
+    <div class="center-btn-wrap">
+      <button class="outline-btn" onclick="document.getElementById('acc-sheet').classList.add('open')">마음 전하실 곳</button>
+    </div>
+
+    <div class="eyebrow">Gallery</div>
+    <h2 class="sec">우리의 순간</h2>
+    <div class="divider">
+      <svg width="72" height="16" viewBox="0 0 72 16" fill="none"><path d="M0 8H28" stroke="#A8823F" stroke-width="0.75"/><circle cx="36" cy="8" r="3" stroke="#A8823F" stroke-width="0.75" fill="none"/><path d="M44 8H72" stroke="#A8823F" stroke-width="0.75"/></svg>
+    </div>
+    <div class="gallery" id="gallery">
+      <div class="gallery-loading" id="gallery-loading">갤러리를 불러오는 중...</div>
+    </div>
+    <div id="gallery-toggle-wrap" style="text-align:center;margin-top:-20px;margin-bottom:32px;display:none;">
+      <button id="gallery-toggle-btn" onclick="toggleGallery()" style="background:none;border:1px solid var(--line);color:var(--sub);border-radius:24px;padding:9px 22px;font-size:12.5px;cursor:pointer;font-family:inherit;">사진 더 보기 ▼</button>
+    </div>
+
+    <div class="eyebrow">Location</div>
+    <h2 class="sec">오시는 길</h2>
+    <div class="divider">
+      <svg width="72" height="16" viewBox="0 0 72 16" fill="none"><path d="M0 8H28" stroke="#A8823F" stroke-width="0.75"/><circle cx="36" cy="8" r="3" stroke="#A8823F" stroke-width="0.75" fill="none"/><path d="M44 8H72" stroke="#A8823F" stroke-width="0.75"/></svg>
+    </div>
+    <div style="text-align:center;margin-bottom:14px;">
+      <div class="venue-name">신도림 라마다호텔 5층 세인트그레이스홀</div>
+      <div class="venue-addr">📍 서울 구로구 경인로 624</div>
+    </div>
+    <div class="map-row">
+      <a class="pill-btn" href="https://map.naver.com/p/search/%EC%8B%A0%EB%8F%84%EB%A6%BC%20%EB%9D%BC%EB%A7%88%EB%8B%A4%ED%98%B8%ED%85%94" target="_blank" rel="noreferrer">네이버 지도</a>
+      <a class="pill-btn" href="https://map.kakao.com/?q=%EC%8B%A0%EB%8F%84%EB%A6%BC%20%EB%9D%BC%EB%A7%88%EB%8B%A4%ED%98%B8%ED%85%94" target="_blank" rel="noreferrer">카카오 지도</a>
+    </div>
+    <p class="venue-note">2호선 신도림역 / 1호선 구로역 도보 10분 (구로역 3번 출구)<br>호텔 주차장 이용가능</p>
+
+    <div class="eyebrow">Share</div>
+    <h2 class="sec">일정 저장 &amp; 공유</h2>
+    <div class="divider">
+      <svg width="72" height="16" viewBox="0 0 72 16" fill="none"><path d="M0 8H28" stroke="#A8823F" stroke-width="0.75"/><circle cx="36" cy="8" r="3" stroke="#A8823F" stroke-width="0.75" fill="none"/><path d="M44 8H72" stroke="#A8823F" stroke-width="0.75"/></svg>
+    </div>
+    <div class="share-row">
+      <button class="pill-btn" onclick="shareKakao()" style="background:#FEE500;color:#3C1E1E;">💬 카카오톡 공유</button>
+      <a class="pill-btn" id="gcal-link" href="#" target="_blank" rel="noreferrer">📅 캘린더 등록</a>
+      <button class="pill-btn" onclick="copyLink()">링크 복사</button>
+    </div>
+    <div class="footer-note">With love, 조윤형 &amp; 최유정</div>
+  </div>
+</div>
+
+<!-- 라이트박스 -->
+<div class="overlay" id="lightbox" style="touch-action:none;">
+  <button class="lb-btn lb-close" onclick="closeLightbox()">✕</button>
+  <button class="lb-btn lb-prev" onclick="moveLightbox(-1)">‹</button>
+  <img id="lightbox-img" src="" alt="" style="max-width:85%;max-height:80%;object-fit:contain;transform-origin:center center;user-select:none;-webkit-user-drag:none;">
+  <button class="lb-btn lb-next" onclick="moveLightbox(1)">›</button>
+  <div id="lb-counter" style="position:absolute;bottom:24px;left:0;right:0;text-align:center;color:rgba(255,255,255,0.7);font-size:13px;letter-spacing:0.1em;"></div>
+</div>
+
+<!-- 계좌 시트 -->
+<div class="sheet-overlay" id="acc-sheet" onclick="if(event.target===this)this.classList.remove('open')">
+  <div class="sheet">
+    <div class="sheet-title">마음 전하실 곳</div>
+
+    <div class="acc-group-title">신랑측</div>
+    <div class="acc-row">
+      <div><div class="acc-name">조윤형</div><div class="acc-bank">국민은행 571902-04-172728</div></div>
+      <button class="copy-btn" onclick="copyText('국민은행 571902-04-172728', this)">복사</button>
+    </div>
+
+    <div class="acc-group-title" style="margin-top:14px;">신부측</div>
+    <div class="acc-row">
+      <div><div class="acc-name">최유정</div><div class="acc-bank">신한은행 110-451-538087</div></div>
+      <button class="copy-btn" onclick="copyText('신한은행 110-451-538087', this)">복사</button>
+    </div>
+
+    <button class="sheet-close" onclick="document.getElementById('acc-sheet').classList.remove('open')">닫기</button>
+  </div>
+</div>
+
+<a class="admin-link" href="admin.html">관리자</a>
+
+<script>
+  /* =========================================================
+     카카오톡 공유
+  ========================================================= */
+  Kakao.init("246c510b0a1bfe805e463255b12dbfe5");
+
+  function shareKakao() {
+    Kakao.Share.sendDefault({
+      objectType: "feed",
+      content: {
+        title: "조윤형 ♥ 최유정 결혼식에 초대합니다",
+        description: "2026년 10월 24일 (토) 오후 3시 10분\n신도림 라마다호텔 5층 세인트그레이스홀",
+        imageUrl: "https://9years-together.github.io/photo-hero.jpg",
+        link: {
+          mobileWebUrl: "https://9years-together.github.io/",
+          webUrl: "https://9years-together.github.io/"
+        }
+      },
+      buttons: [
+        {
+          title: "초대장 보기",
+          link: {
+            mobileWebUrl: "https://9years-together.github.io/",
+            webUrl: "https://9years-together.github.io/"
+          }
+        }
+      ]
+    });
+  }
+
+  /* =========================================================
+     Firestore REST API로 갤러리 불러오기 (SDK 불필요)
+  ========================================================= */
+  var FIRESTORE_PROJECT = "magics-17";
+  var FIRESTORE_URL = "https://firestore.googleapis.com/v1/projects/" + FIRESTORE_PROJECT + "/databases/(default)/documents/wedding/gallery";
+
+  var gallery = [];
+  var galleryEl = document.getElementById("gallery");
+
+  // Cloudinary 이미지 최적화 (원본 URL에 변환 파라미터 삽입)
+  function optimizeUrl(url, width) {
+    if (url.indexOf("res.cloudinary.com") !== -1 && url.indexOf("/upload/") !== -1) {
+      return url.replace("/upload/", "/upload/w_" + width + ",q_auto,f_auto/");
+    }
+    return url;
+  }
+
+  var galleryExpanded = false;
+  var GALLERY_LIMIT = 6;
+
+  function renderGallery() {
+    galleryEl.innerHTML = "";
+    if (gallery.length === 0) {
+      galleryEl.innerHTML = '<div class="gallery-loading">등록된 사진이 없습니다.</div>';
+      document.getElementById("gallery-toggle-wrap").style.display = "none";
+      return;
+    }
+    var showCount = galleryExpanded ? gallery.length : Math.min(gallery.length, GALLERY_LIMIT);
+    for (var i = 0; i < showCount; i++) {
+      (function(idx) {
+        var btn = document.createElement("button");
+        var thumbUrl = optimizeUrl(gallery[idx], 400);
+        btn.innerHTML = '<img src="' + thumbUrl + '" alt="" loading="lazy">';
+        btn.onclick = function() { openLightbox(idx); };
+        galleryEl.appendChild(btn);
+      })(i);
+    }
+    var toggleWrap = document.getElementById("gallery-toggle-wrap");
+    var toggleBtn = document.getElementById("gallery-toggle-btn");
+    if (gallery.length > GALLERY_LIMIT) {
+      toggleWrap.style.display = "block";
+      if (galleryExpanded) {
+        toggleBtn.textContent = "사진 접기 ▲";
+      } else {
+        toggleBtn.textContent = "사진 더 보기 +" + (gallery.length - GALLERY_LIMIT) + " ▼";
+      }
+    } else {
+      toggleWrap.style.display = "none";
+    }
+  }
+
+  function toggleGallery() {
+    galleryExpanded = !galleryExpanded;
+    renderGallery();
+    if (!galleryExpanded) {
+      document.getElementById("gallery").scrollIntoView({ behavior: "smooth", block: "start" });
+    }
+  }
+
+  // Firestore REST API로 갤러리 데이터 읽기
+  fetch(FIRESTORE_URL)
+    .then(function(res) {
+      if (!res.ok) throw new Error("HTTP " + res.status);
+      return res.json();
+    })
+    .then(function(doc) {
+      if (doc.fields && doc.fields.urls && doc.fields.urls.arrayValue && doc.fields.urls.arrayValue.values) {
+        gallery = doc.fields.urls.arrayValue.values.map(function(v) { return v.stringValue; });
+      }
+      renderGallery();
+    })
+    .catch(function(e) {
+      galleryEl.innerHTML = '<div class="gallery-loading" style="color:#C0392B;">갤러리 로딩 실패: ' + e.message + '</div>';
+    });
+
+  // 라이트박스
+  var lbIndex = 0;
+  var lbCounter = document.getElementById("lb-counter");
+  var zoomed = false;
+
+  // 주변 사진 미리 로딩
+  function preloadNearby(idx) {
+    for (var d = -2; d <= 2; d++) {
+      if (d === 0) continue;
+      var ni = (idx + d + gallery.length) % gallery.length;
+      var img = new Image();
+      img.src = optimizeUrl(gallery[ni], 1200);
+    }
+  }
+
+  function openLightbox(i) {
+    lbIndex = i;
+    zoomed = false;
+    var img = document.getElementById("lightbox-img");
+    img.src = optimizeUrl(gallery[i], 1200);
+    img.style.transform = "scale(1)";
+    lbCounter.textContent = (i + 1) + " / " + gallery.length;
+    document.getElementById("lightbox").classList.add("open");
+    preloadNearby(i);
+  }
+  function closeLightbox() {
+    document.getElementById("lightbox").classList.remove("open");
+    zoomed = false;
+    document.getElementById("lightbox-img").style.transform = "scale(1)";
+  }
+  function moveLightbox(delta) {
+    if (zoomed) return;
+    lbIndex = (lbIndex + delta + gallery.length) % gallery.length;
+    var img = document.getElementById("lightbox-img");
+    img.src = optimizeUrl(gallery[lbIndex], 1200);
+    img.style.transform = "scale(1)";
+    lbCounter.textContent = (lbIndex + 1) + " / " + gallery.length;
+    preloadNearby(lbIndex);
+  }
+
+  // 핀치줌 + 스와이프 (충돌 없이 공존)
+  (function() {
+    var lbEl = document.getElementById("lightbox");
+    var lbImg = document.getElementById("lightbox-img");
+
+    // 상태
+    var scale = 1;
+    var startX = 0, startY = 0;
+    var moved = false;
+
+    // 핀치 관련
+    var pinching = false;
+    var pinchStartDist = 0;
+    var pinchStartScale = 1;
+
+    function getDistance(t0, t1) {
+      var dx = t0.clientX - t1.clientX;
+      var dy = t0.clientY - t1.clientY;
+      return Math.sqrt(dx * dx + dy * dy);
+    }
+
+    function applyScale(s) {
+      scale = Math.max(1, Math.min(5, s));
+      lbImg.style.transform = "scale(" + scale + ")";
+      zoomed = scale > 1;
+    }
+
+    lbEl.addEventListener("touchstart", function(e) {
+      if (e.touches.length === 2) {
+        // 핀치 시작
+        pinching = true;
+        pinchStartDist = getDistance(e.touches[0], e.touches[1]);
+        pinchStartScale = scale;
+        e.preventDefault();
+      } else if (e.touches.length === 1) {
+        pinching = false;
+        startX = e.touches[0].clientX;
+        startY = e.touches[0].clientY;
+        moved = false;
+      }
+    }, { passive: false });
+
+    lbEl.addEventListener("touchmove", function(e) {
+      if (e.touches.length === 2) {
+        // 핀치 중
+        pinching = true;
+        var dist = getDistance(e.touches[0], e.touches[1]);
+        applyScale(pinchStartScale * (dist / pinchStartDist));
+        e.preventDefault();
+      } else if (e.touches.length === 1 && !pinching) {
+        if (zoomed) return; // 확대 상태에서는 스와이프 비활성
+        var dx = e.touches[0].clientX - startX;
+        var dy = e.touches[0].clientY - startY;
+        if (Math.abs(dx) > Math.abs(dy) && Math.abs(dx) > 10) {
+          e.preventDefault();
+          moved = true;
+        }
+      }
+    }, { passive: false });
+
+    lbEl.addEventListener("touchend", function(e) {
+      if (pinching && e.touches.length < 2) {
+        // 핀치 끝나면 1 미만이면 복귀
+        if (scale < 1.1) applyScale(1);
+        pinching = false;
+        return;
+      }
+      if (pinching) return;
+
+      var dx = e.changedTouches[0].clientX - startX;
+      var dy = e.changedTouches[0].clientY - startY;
+
+      // 스와이프
+      if (!zoomed && moved && Math.abs(dx) > 50) {
+        moveLightbox(dx < 0 ? 1 : -1);
+        moved = false;
+        return;
+      }
+
+      // 배경 탭으로 닫기
+      if (!moved && Math.abs(dx) < 5 && Math.abs(dy) < 5 && e.target === lbEl) {
+        closeLightbox();
+      }
+      moved = false;
+    }, { passive: true });
+  })();
+
+  // 유틸
+  function copyText(text, btn) {
+    navigator.clipboard.writeText(text).then(function() {
+      var original = btn.textContent;
+      btn.textContent = "복사됨";
+      setTimeout(function() { btn.textContent = original; }, 1500);
+    });
+  }
+  function copyLink() {
+    navigator.clipboard.writeText(window.location.href).then(function() { alert("링크가 복사되었습니다."); });
+  }
+
+  // 구글 캘린더 링크
+  (function() {
+    var start = new Date("2026-10-24T15:10:00+09:00");
+    var end = new Date(start.getTime() + 2 * 60 * 60 * 1000);
+    var fmt = function(d) { return d.toISOString().replace(/[-:]/g, "").split(".")[0] + "Z"; };
+    var params = new URLSearchParams({
+      action: "TEMPLATE",
+      text: "조윤형 ♥ 최유정 결혼식",
+      dates: fmt(start) + "/" + fmt(end),
+      details: "결혼식에 함께해 주세요.",
+      location: "서울 구로구 경인로 624 신도림 라마다호텔"
+    });
+    document.getElementById("gcal-link").href = "https://calendar.google.com/calendar/render?" + params.toString();
+  })();
+
+</script>
+</body>
+</html>
